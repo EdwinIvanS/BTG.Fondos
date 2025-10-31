@@ -26,6 +26,9 @@ namespace BTG.Fondos.API.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
                 var existingUser = await _usuarioRepository.GetByUsernameAsync(request.Username);
                 if (existingUser != null)
                     return BadRequest("El nombre de usuario ya existe.");
@@ -50,7 +53,10 @@ namespace BTG.Fondos.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] DTO.Auth.Request.LoginRequest request)
         {
-            try { 
+            try {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
                 var user = await _usuarioRepository.GetByUsernameAsync(request.Username);
                 if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.ContrasenaHash))
                     return Unauthorized("Usuario o contraseña inválidos");
