@@ -24,6 +24,9 @@ namespace BTG.Fondos.API.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
                 SuscripcionResponse resultado = await _fondoService.SuscribirAsync(request);
                 return Ok(resultado);
             }
@@ -39,6 +42,9 @@ namespace BTG.Fondos.API.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
                 var resultado = await _fondoService.CancelarAsync(request);
                 return Ok(resultado);
             }
@@ -53,6 +59,9 @@ namespace BTG.Fondos.API.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
                 var historial = await _fondoService.ObtenerHistorialTransaccionesAsync(clienteId);
 
                 if (historial == null || !historial.Any())
