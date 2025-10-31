@@ -1,0 +1,49 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Despliegue básico de API .NET 8 en AWS EC2 (Free Tier, sin SSH)
+
+Resources:
+  ApiSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow HTTP traffic on port 80
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: ApiSecurityGroup
+
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      ImageId: ami-051f8a213df8bc089  # Amazon Linux 2023 (us-east-1)
+      SecurityGroupIds:
+        - !Ref ApiSecurityGroup
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          dnf update -y
+          dnf install -y dotnet-sdk-8.0 unzip wget
+          mkdir -p /var/www/api
+          cd /var/www/api
+          echo "Descargando API..."
+          wget https://btg-fondos-api-bucket.s3.us-east-1.amazonaws.com/btg-fondos-api.zip -O api.zip
+          echo "Descomprimiendo..."
+          unzip api.zip
+          echo "Iniciando API..."
+          nohup dotnet BTG.Fondos.API.dll --urls "http://0.0.0.0:80" > log.txt 2>&1 &
+          echo "Despliegue completado" > /var/log/user-data.log
+      Tags:
+        - Key: Name
+          Value: ApiNetCoreServer
+
+Outputs:
+  ApiPublicIP:
+    Description: IP pública de la instancia
+    Value: !GetAtt EC2Instance.PublicIp
+  ApiURL:
+    Description: URL pública de la API
+    Value: !Sub "http://${EC2Instance.PublicDnsName}"
