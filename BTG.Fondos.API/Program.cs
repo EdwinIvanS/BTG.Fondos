@@ -1,6 +1,7 @@
 using BTG.Fondos.Auth.Token;
 using BTG.Fondos.BLL.Interfaces;
 using BTG.Fondos.BLL.Services;
+using BTG.Fondos.Common;
 using BTG.Fondos.DAL.Interfaces;
 using BTG.Fondos.DAL.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -112,6 +113,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 

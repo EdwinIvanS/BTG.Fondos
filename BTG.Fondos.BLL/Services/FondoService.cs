@@ -1,8 +1,10 @@
 ﻿using BTG.Fondos.BLL.Interfaces;
+using BTG.Fondos.Common;
 using BTG.Fondos.DAL.Interfaces;
 using BTG.Fondos.DTO.Fondos.Request;
 using BTG.Fondos.DTO.Fondos.Response;
 using BTG.Fondos.DTO.Models;
+using InvalidOperationException = BTG.Fondos.Common.InvalidOperationException;
 
 namespace BTG.Fondos.BLL.Services
 {
@@ -32,13 +34,13 @@ namespace BTG.Fondos.BLL.Services
             var fondo = await _fondosRepository.GetByIdAsync(request.IdFondo);
 
             if (cliente == null || fondo == null)
-                throw new InvalidOperationException("Cliente o fondo no encontrado.");
+                throw new NotFoundException("Cliente o fondo no encontrado.");
 
             if (request.Monto < fondo.MontoMinimo)
-                throw new InvalidOperationException($"El monto mínimo para {fondo.Nombre} es {fondo.MontoMinimo:C}");
+                throw new BusinessValidationException($"El monto mínimo para {fondo.Nombre} es {fondo.MontoMinimo:C}");
 
             if (cliente.Saldo < request.Monto)
-                throw new InvalidOperationException($"No tiene saldo disponible para vincularse al fondo {fondo.Nombre}");
+                throw new BusinessValidationException($"No tiene saldo disponible para vincularse al fondo {fondo.Nombre}");
 
             cliente.Saldo -= request.Monto;
             await _clienteRepository.UpdateSaldoAsync(cliente.Id, cliente.Saldo);

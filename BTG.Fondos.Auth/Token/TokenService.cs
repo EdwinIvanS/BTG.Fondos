@@ -24,9 +24,9 @@ namespace BTG.Fondos.Auth.Token
         {
             var claims = new[]
             {
-            new Claim(ClaimTypes.Name, user.NombreUsuario),
-            new Claim(ClaimTypes.Role, user.Rol)
-        };
+                new Claim(ClaimTypes.Name, user.NombreUsuario),
+                new Claim(ClaimTypes.Role, user.Rol)
+            };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSettings:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
