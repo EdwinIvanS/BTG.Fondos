@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BTG.Fondos.Common\BTG.Fondos.Common.csproj" />
     <ProjectReference Include="..\BTG.Fondos.DAL\BTG.Fondos.DAL.csproj" />
     <ProjectReference Include="..\BTG.Fondos.DTO\BTG.Fondos.DTO.csproj" />
   </ItemGroup>

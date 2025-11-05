@@ -32,7 +32,7 @@ namespace BTG.Fondos.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { mensaje = "Ocurrió un error inesperado.", detalle = ex.Message });
+                throw;
             }
         }
 
@@ -50,7 +50,7 @@ namespace BTG.Fondos.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { mensaje = "Ocurrió un error inesperado.", detalle = ex.Message });
+                throw;
             }
         }
 
